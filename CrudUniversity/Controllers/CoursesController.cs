@@ -23,41 +23,39 @@ namespace CrudUniversity.Controllers
         public async Task<IActionResult> Index(string sortOrder, string SearchString, string filterBy)
         {
             ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
-            ViewData["DateSortParm"] = sortOrder == "Date" ? "date_desc" : "Date";
             ViewData["CurrentFilter"] = SearchString;
 
-            var courses = from s in _context.Courses select s;
+            var courses = from c in _context.Courses select c;
 
             if (!String.IsNullOrEmpty(SearchString))
             {
                 if (filterBy == "Title")
                 {
-                    courses = courses.Where(s => s.Title.Contains(SearchString));
+                    courses = courses.Where(c => c.Title.Contains(SearchString));
                 }
                 else if (filterBy == "Credito")
                 {
-                    courses = courses.Where(s => s.Credits == SearchString);
+                    courses = courses.Where(c => c.Credits.Equals(int.Parse(SearchString)));
                 }
             }
 
             switch (sortOrder)
             {
                 case "name_desc":
-                    courses = courses.OrderByDescending(s => s.Title);
-                    break;
-                case "Date":
-                    courses = courses.OrderBy(s => s.Credito);
+                    courses = courses.OrderByDescending(c => c.Title);
                     break;
                 case "date_desc":
-                    courses = courses.OrderByDescending(s => s.Credito);
+                    courses = courses.OrderByDescending(c => c.Credits);
                     break;
                 default:
-                    courses = courses.OrderBy(s => s.Title);
+                    courses = courses.OrderBy(c => c.Title);
                     break;
             }
 
             return View(await courses.AsNoTracking().ToListAsync());
         }
+
+      
 
         // GET: Courses/Details/5
         public async Task<IActionResult> Details(int? id)

@@ -20,10 +20,32 @@ namespace CrudUniversity.Controllers
         }
 
         // GET: Enrollments
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder, Grade? SearchGrade)
         {
-            var aplicationDbContext = _context.Enrollments.Include(e => e.Course).Include(e => e.Student);
-            return View(await aplicationDbContext.ToListAsync());
+            ViewData["GradeSortParm"] = String.IsNullOrEmpty(sortOrder) ? "grade_desc" : "";
+            ViewData["CurrentGradeFilter"] = SearchGrade;
+
+            var enrollments = from e in _context.Enrollments
+                             .Include(e => e.Student)
+                             .Include(e => e.Course)
+                              select e;
+
+            if (SearchGrade != null)
+            {
+                enrollments = enrollments.Where(e => e.Grade == SearchGrade);
+            }
+
+            switch (sortOrder)
+            {
+                case "grade_desc":
+                    enrollments = enrollments.OrderByDescending(e => e.Grade);
+                    break;
+                default:
+                    enrollments = enrollments.OrderBy(e => e.Grade);
+                    break;
+            }
+
+            return View(await enrollments.AsNoTracking().ToListAsync());
         }
 
         // GET: Enrollments/Details/5

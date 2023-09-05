@@ -5,12 +5,29 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Index</h1>
+<h1>Registros de cursos</h1>
+<div class="mt-2 mb-2">
+    <form asp-action="Index" method="get" class="form-inline">
+        <div class="input-group">
+            <a class="btn btn-sm  btn-success" asp-action="Index">Restaurar lista</a>
+            <div class="input-group" >
+                <label class="input-group-text">Busca por:</label>
+            <select name="filterBy" class="form-control" style="width:12px">
+                <option value="Title">Título</option>
+                <option value="Credito">Créditos</option>
+            </select>
+            <input type="text" name="SearchString" class="form-control"value="@ViewData["CurrentFilter"]" />
+            
+            <input type="submit" value="Buscar" class="btn btn-dark" />
+            </div>
+    </div>
+</form>
+</div>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" class="btn btn-dark">Crear Curso</a>
 </p>
-<table class="table">
+<table class="table table-striped table-bordered table-secondary">
     <thead>
         <tr>
             <th>
@@ -19,7 +36,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.Credits)
             </th>
-            <th></th>
+            <th class="d-flex justify-content-center">Acciones</th>
         </tr>
     </thead>
     <tbody>
@@ -31,10 +48,10 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Credits)
             </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.CourseID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.CourseID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.CourseID">Delete</a>
+            <td class="d-flex justify-content-around">
+                    <a asp-action="Edit" class="btn btn-success shadow-lg p-1" asp-route-id="@item.CourseID">Editar</a> |
+                    <a asp-action="Details" class="btn btn-warning shadow-lg p-1" asp-route-id="@item.CourseID">Detalles</a> |
+                    <a asp-action="Delete" class="btn btn-danger shadow-lg p-1" asp-route-id="@item.CourseID">Borrar</a>
             </td>
         </tr>
 }
